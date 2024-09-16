@@ -1,15 +1,26 @@
 import os
 from flask import Flask
 from flask_cors import CORS
-
-# Add these lines before importing SQLAlchemy
 import sqlalchemy as sa
-sa.__version__
-
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-CORS(app)
+
+# 獲取允許的源
+allowed_origins = [
+    "http://localhost:3000",  # 本地開發
+    "https://21-day-date-front.vercel.app/",  # 您的 React 應用部署 URL
+    os.environ.get("REACT_APP_URL", "")  # 從環境變量獲取
+]
+
+# 移除列表中的空字符串
+allowed_origins = [origin for origin in allowed_origins if origin]
+
+# 設置 CORS
+CORS(app, resources={r"/*": {"origins": allowed_origins}})
+
+# SQLAlchemy 設置
+sa.__version__  # 這行可以保留，用於版本檢查
 
 # 使用環境變量或默認值設置數據庫 URI
 database_url = os.environ.get('DATABASE_URL', 'sqlite:///database.db')
