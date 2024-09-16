@@ -18,6 +18,12 @@ def create_user():
     db.session.commit()
     return jsonify({'message': 'User created successfully'}), 200
 
+def handle_login_options():
+    response = app.make_default_options_response()
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'POST,OPTIONS')
+    return response
+
 @app.route('/login', methods=['POST'])
 def login():
     try:
