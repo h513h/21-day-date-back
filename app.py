@@ -17,7 +17,14 @@ allowed_origins = [
 allowed_origins = [origin for origin in allowed_origins if origin]
 
 # 設置 CORS
-CORS(app, resources={r"/*": {"origins": allowed_origins}})
+CORS(app, resources={r"/*": {
+    "origins": [
+        "https://21-day-date-front.vercel.app",  # Vercel 前端 URL
+        "http://localhost:3000"  # 本地開發 URL
+    ],
+    "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "allow_headers": ["Content-Type", "Authorization"]
+}})
 
 # SQLAlchemy 設置
 sa.__version__  # 這行可以保留，用於版本檢查
