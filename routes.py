@@ -12,7 +12,7 @@ def test():
 @app.route('/create_user', methods=['POST'])
 def create_user():
     data = request.get_json()
-    hashed_password = generate_password_hash(data['password'])
+    hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
     new_user = User(username=data['username'], password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
@@ -20,20 +20,24 @@ def create_user():
 
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
+    try:
+        data = request.get_json()
+        username = data.get('username')
+        password = data.get('password')
 
-    if not username or not password:
-        return jsonify({'message': 'Missing username or password'}), 400
+        if not username or not password:
+            return jsonify({'message': 'Missing username or password'}), 400
 
-    user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username).first()
 
-    if user and check_password_hash(user.password, password):
-        return jsonify({'message': 'Login successful', 'user_id': user.id}), 200
-    else:
-        return jsonify({'message': 'Invalid username or password'}), 401
-
+        if user and check_password_hash(user.password, password):
+            return jsonify({'message': 'Login successful', 'user_id': user.id}), 200
+        else:
+            return jsonify({'message': 'Invalid username or password'}), 401
+    except Exception as e:
+        app.logger.error(f"Login error: {str(e)}")
+        return jsonify({'message': 'An error occurred during login', 'error': str(e)}), 500
+    
 @app.route('/user/<username>', methods=['DELETE'])
 def delete_user(username):
     user = User.query.filter_by(username=username).first()
