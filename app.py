@@ -1,7 +1,12 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
 import os
+from flask import Flask
+from flask_cors import CORS
+
+# Add these lines before importing SQLAlchemy
+import sqlalchemy as sa
+sa.__version__
+
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 CORS(app)
