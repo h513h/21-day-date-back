@@ -81,7 +81,9 @@ def get_daily_list(username):
         result.append({
             'title': item.title,
             'steps': steps,
-            'time': item.time
+            'time': item.time,
+            'pic1': item.pic1,
+            'pic2': item.pic2
         })
     
     return jsonify(result)
@@ -90,7 +92,7 @@ def get_daily_list(username):
 def add_daily_list(username):
     data = request.get_json()
     user = User.query.filter_by(username=username).first_or_404()
-    new_item = DailyList(title=data['title'], time=data['time'], user_id=user.id)
+    new_item = DailyList(title=data['title'], time=data['time'], user_id=user.id, pic1=data.get('pic1'), pic2=data.get('pic2'))
     new_item.steps_list = data['steps']
     db.session.add(new_item)
     db.session.commit()
@@ -120,7 +122,9 @@ def get_weekly_list(username):
         result.append({
             'title': item.title,
             'steps': steps,
-            'time': item.time
+            'time': item.time,
+            'pic1': item.pic1,
+            'pic2': item.pic2
         })
     
     return jsonify(result)
@@ -129,7 +133,7 @@ def get_weekly_list(username):
 def add_weekly_list(username):
     data = request.get_json()
     user = User.query.filter_by(username=username).first_or_404()
-    new_item = WeeklyList(title=data['title'], time=data['time'], user_id=user.id)
+    new_item = WeeklyList(title=data['title'], time=data['time'], user_id=user.id, pic1=data.get('pic1'), pic2=data.get('pic2'))
     new_item.steps_list = data['steps']
     db.session.add(new_item)
     db.session.commit()
@@ -175,7 +179,9 @@ def serialize_list_item(item):
     return {
         'title': item.title,
         'steps': json.loads(item.steps),
-        'time': item.time
+        'time': item.time,
+        'pic1': item.pic1,
+        'pic2': item.pic2
     }
 
 @app.route('/<username>/generate_todo_list', methods=['POST'])

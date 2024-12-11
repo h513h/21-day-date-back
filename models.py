@@ -16,6 +16,8 @@ class DailyList(db.Model):
     title = db.Column(db.String(100), nullable=False)
     steps = db.Column(db.Text, nullable=False)
     time = db.Column(db.String(50), nullable=False)
+    pic1 = db.Column(db.String(255))
+    pic2 = db.Column(db.String(255))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     @property
@@ -31,6 +33,8 @@ class WeeklyList(db.Model):
     title = db.Column(db.String(100), nullable=False)
     steps = db.Column(db.Text, nullable=False)
     time = db.Column(db.String(50), nullable=False)
+    pic1 = db.Column(db.String(255))
+    pic2 = db.Column(db.String(255))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     @property
