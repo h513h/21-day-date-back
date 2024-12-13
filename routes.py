@@ -206,7 +206,7 @@ def generate_todo_list(username):
     for item in todo_items:
         content = json.dumps(serialize_list_item(item))
         list_type = 'daily' if isinstance(item, DailyList) else 'weekly'
-        new_todo = TodoList(content=content, user_id=user.id, list_type=list_type)
+        new_todo = TodoList(content=content, user_id=user.id, list_type=list_type, done=False)
         db.session.add(new_todo)
     
     db.session.commit()
